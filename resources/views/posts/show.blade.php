@@ -8,6 +8,7 @@
 </head>
 <body>
     <h1>Single Post</h1>
+    <h2><a href="{{route('posts.index')}}">Back</a></h2>
     <div>
         <ul>
             <li>Title: {{ $post['title']  }}</li>

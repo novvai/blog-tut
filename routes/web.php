@@ -2,21 +2,42 @@
 
 use Illuminate\Support\Facades\Route;
 
-$posts = [
-    [
-        "id" => 1,
-        "title" => "Holywood",
-        "created_at" => "2021-03-03 11:20:33",
-        "description" => "The movie town",
-        "author" => "John doe"
-    ], [
-        "id" => 2,
-        "title" => "Johny Depp, Pirates",
-        "created_at" => "2021-10-03 12:16:23",
-        "description" => "The movie town",
-        "author" => "John doe"
-    ]
-];
+function loadPosts()
+{
+    $string_posts = file_get_contents(storage_path('posts.json'));
+    $posts = json_decode($string_posts, true);
+
+    return collect($posts);
+}
+
+function savePosts($posts): void
+{
+    $json_posts = json_encode($posts);
+    file_put_contents(storage_path('posts.json'), $json_posts);
+}
+
+
+// [REF]
+// function loadPostsOptimised()
+// {
+//     return json_decode(file_get_contents(storage_path('posts.json')), true);
+// }
+
+// $posts = [
+//     [
+//         "id" => 1,
+//         "title" => "Holywood",
+//         "created_at" => "2021-03-03 11:20:33",
+//         "description" => "The movie town",
+//         "author" => "John doe"
+//     ], [
+//         "id" => 2,
+//         "title" => "Johny Depp, Pirates",
+//         "created_at" => "2021-10-03 12:16:23",
+//         "description" => "The movie town",
+//         "author" => "John doe"
+//     ]
+// ];
 
 
 /*
@@ -30,33 +51,31 @@ $posts = [
 |
 */
 
-Route::get('/', function () use ($posts) {
-    return view('posts.listing', ['blog_posts' => $posts]);
-});
+Route::get('/posts', function () {
+    $posts = loadPosts();
 
-Route::get('/post/{id}', function ($id) use ($posts) {
-    $current_post = [];
-    foreach ($posts as $post) {
-        if ($post['id'] == $id) {
-            $current_post = $post;
-            break;
-        }
-    }
-    return view('posts.single', ['post' => $current_post]);
-});
+    return view('posts.index', ['blog_posts' => $posts]);
+})->name('posts.index');
 
-Route::get('/post/{id}/user/{author}/{date}', function ($id, $author, $date) use ($posts) {
-    dd($id, $author, $date);
-});
+// [REF]
+// Route::get('/posts', fn () => view('posts.index', ['blog_posts' => loadPosts()]))->name('posts.index');
 
+Route::get('/posts/create', function () {
+    return view('posts.create');
+})->name('posts.create');
 
-Route::get('/users/{id}/{blog_id?}', function ($id, $blog_id = null) use ($posts) {
-    dd($id, $blog_id);
-});
+Route::get('/posts/{post}', function (int $postId) {
+    $posts = loadPosts();
+
+    $post = $posts->firstWhere('id', $postId);
+
+    return view('posts.show', ['post' => $post]);
+})->name('posts.show');
 
 
-// Route::post
-// Route::get()
-// Route::put
+
+// // Route::post
+// // Route::get()
+// // Route::put
 // Route::patch
 // Route:delete

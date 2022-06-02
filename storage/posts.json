@@ -1,16 +1,1 @@
-[
-    {
-        "id" : 1,
-        "title" : "Holywood",
-        "description" : "The movie town",
-        "author" : "John doe",
-        "created_at" : "2021-03-03 11:20:33"
-    },
-    {
-        "id" : 2,
-        "title" : "Johny Depp, Pirates",
-        "description" : "The movie town",
-        "author" : "John doe",
-        "created_at" : "2021-10-03 12:16:23"
-    }
-]
+{"0":{"id":1,"title":"Holywood","description":"The movie town","author":"John doe","created_at":"2021-03-03 11:20:33"},"2":{"id":14070,"title":"Titanic is a hoax","author":"Joghny","description":"test","created_at":"2022-06-02 16:24:44"}}

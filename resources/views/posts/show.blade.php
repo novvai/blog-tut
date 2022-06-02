@@ -9,6 +9,14 @@
 <body>
     <h1>Single Post</h1>
     <h2><a href="{{route('posts.index')}}">Back</a></h2>
+    <h2>
+        <a href="{{route('posts.edit', $post['id'])}}">Edit</a>
+        <form method="POST" action="{{route('posts.destroy', $post['id'])}}">
+            @csrf
+            @method('DELETE')
+            <input type="submit" value="Delete"/>
+        </form>
+    </h2>
     <div>
         <ul>
             <li>Title: {{ $post['title']  }}</li>

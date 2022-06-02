@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 function loadPosts()
@@ -60,9 +62,59 @@ Route::get('/posts', function () {
 // [REF]
 // Route::get('/posts', fn () => view('posts.index', ['blog_posts' => loadPosts()]))->name('posts.index');
 
+
 Route::get('/posts/create', function () {
     return view('posts.create');
 })->name('posts.create');
+
+
+
+Route::post('/posts', function (Request $request) {
+
+    $posts = loadPosts();
+
+    $now = Carbon::now();
+
+    $post = [
+        'id' => rand(2, 99999),
+        'title' => $request->get('title'),
+        'author' => $request->get('author'),
+        'description' => $request->get('description'),
+        'created_at' => $now->toDateTimeString()
+    ];
+
+    $posts->add($post);
+
+    savePosts($posts);
+
+    return redirect()->route('posts.index');
+})->name('posts.store');
+
+Route::get('/posts/{post}/edit', function (int $postId) {
+    $posts = loadPosts();
+    $post = $posts->firstWhere('id', $postId);
+
+
+    return view('posts.edit', ['post' => $post]);
+})->name('posts.edit');
+
+Route::put('/posts/{post}', function (Request $request, int $postId) {
+    $posts = loadPosts();
+
+    $post = $posts->firstWhere('id', $postId);
+
+    $post['title'] = $request->get('title');
+    $post['description'] = $request->get('description');
+    $post['author'] = $request->get('author');
+
+    $posts = $posts->map(function ($postItem) use ($post) {
+        return $postItem['id'] == $post['id'] ? $post : $postItem;
+    });
+
+    savePosts($posts);
+
+    return redirect()->route('posts.show', $postId);
+})->name('posts.update');
 
 Route::get('/posts/{post}', function (int $postId) {
     $posts = loadPosts();
@@ -72,10 +124,18 @@ Route::get('/posts/{post}', function (int $postId) {
     return view('posts.show', ['post' => $post]);
 })->name('posts.show');
 
+Route::delete('/posts/{post}', function (int $postId) {
+    $posts = loadPosts();
 
+    $posts = $posts->filter(fn ($post) => $post['id'] != $postId);
 
-// // Route::post
-// // Route::get()
-// // Route::put
-// Route::patch
-// Route:delete
+    savePosts($posts);
+
+    return redirect()->route('posts.index');
+})->name('posts.destroy');
+
+// // Route::post - CREATE
+// // Route::get() - RETRIVES
+// // Route::put - UPDATE -> Full 
+// Route::patch - UPDATE -> Partial 
+// Route:delete - DELETE 

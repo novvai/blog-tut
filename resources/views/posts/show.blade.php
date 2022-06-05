@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+@extends('layout', ['title'=> $post['title']])
+
+@section('content')
     <h1>Single Post</h1>
     <h2><a href="{{route('posts.index')}}">Back</a></h2>
     <h2>
@@ -25,7 +19,5 @@
             <li>Author: {{ $post['author']  }}</li>
         </ul>
     </div>
-</body>
-</html>
-
+@endsection
 

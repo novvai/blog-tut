@@ -4,6 +4,9 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\PostController;
+use App\Http\Controllers\AuthorController;
+
 function loadPosts()
 {
     $string_posts = file_get_contents(storage_path('posts.json'));
@@ -53,24 +56,14 @@ function savePosts($posts): void
 |
 */
 
-Route::get('/posts', function () {
-    $posts = loadPosts();
-
-    return view('posts.index', ['blog_posts' => $posts]);
-})->name('posts.index');
+Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 
 // [REF]
 // Route::get('/posts', fn () => view('posts.index', ['blog_posts' => loadPosts()]))->name('posts.index');
 
-
-Route::get('/posts/create', function () {
-    return view('posts.create');
-})->name('posts.create');
-
-
+Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
 
 Route::post('/posts', function (Request $request) {
-
     $posts = loadPosts();
 
     $now = Carbon::now();
@@ -134,8 +127,5 @@ Route::delete('/posts/{post}', function (int $postId) {
     return redirect()->route('posts.index');
 })->name('posts.destroy');
 
-// // Route::post - CREATE
-// // Route::get() - RETRIVES
-// // Route::put - UPDATE -> Full 
-// Route::patch - UPDATE -> Partial 
-// Route:delete - DELETE 
+
+Route::resource('author', AuthorController::class);

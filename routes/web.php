@@ -63,69 +63,15 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 
 Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
 
-Route::post('/posts', function (Request $request) {
-    $posts = loadPosts();
+Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
 
-    $now = Carbon::now();
+Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
 
-    $post = [
-        'id' => rand(2, 99999),
-        'title' => $request->get('title'),
-        'author' => $request->get('author'),
-        'description' => $request->get('description'),
-        'created_at' => $now->toDateTimeString()
-    ];
+Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
 
-    $posts->add($post);
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 
-    savePosts($posts);
-
-    return redirect()->route('posts.index');
-})->name('posts.store');
-
-Route::get('/posts/{post}/edit', function (int $postId) {
-    $posts = loadPosts();
-    $post = $posts->firstWhere('id', $postId);
+Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
 
-    return view('posts.edit', ['post' => $post]);
-})->name('posts.edit');
-
-Route::put('/posts/{post}', function (Request $request, int $postId) {
-    $posts = loadPosts();
-
-    $post = $posts->firstWhere('id', $postId);
-
-    $post['title'] = $request->get('title');
-    $post['description'] = $request->get('description');
-    $post['author'] = $request->get('author');
-
-    $posts = $posts->map(function ($postItem) use ($post) {
-        return $postItem['id'] == $post['id'] ? $post : $postItem;
-    });
-
-    savePosts($posts);
-
-    return redirect()->route('posts.show', $postId);
-})->name('posts.update');
-
-Route::get('/posts/{post}', function (int $postId) {
-    $posts = loadPosts();
-
-    $post = $posts->firstWhere('id', $postId);
-
-    return view('posts.show', ['post' => $post]);
-})->name('posts.show');
-
-Route::delete('/posts/{post}', function (int $postId) {
-    $posts = loadPosts();
-
-    $posts = $posts->filter(fn ($post) => $post['id'] != $postId);
-
-    savePosts($posts);
-
-    return redirect()->route('posts.index');
-})->name('posts.destroy');
-
-
-Route::resource('author', AuthorController::class);
+// Route::resource('author', AuthorController::class);

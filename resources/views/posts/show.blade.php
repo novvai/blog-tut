@@ -16,7 +16,7 @@
             <li>Title: {{ $post['title']  }}</li>
             <li>Created at: {{ $post['created_at']  }}</li>
             <li>Descritpion: {{ $post['description']  }}</li>
-            <li>Author: {{ $post['author']  }}</li>
+            <li>Author: {{ $post['author']->first_name  }}</li>
         </ul>
     </div>
 @endsection

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Author;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +21,8 @@ class PostController extends Controller
 
     public function create()
     {
-        return view('posts.create');
+        $authors = Author::all();
+        return view('posts.create', compact('authors'));
     }
 
     public function show(int $postId)
@@ -34,16 +36,15 @@ class PostController extends Controller
     {
 
         $post = Post::where('id', $postId)->first();
+        $authors = Author::all();
 
-
-        return view('posts.edit', ['post' => $post]);
+        return view('posts.edit', ['post' => $post, 'authors' => $authors]);
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|min:3',
-            'author' => 'required|min:2',
             'description' => 'required|max:255'
         ]);
 
@@ -53,9 +54,11 @@ class PostController extends Controller
 
         $post = new Post([
             'title' => $request->get('title'),
-            'author' => $request->get('author'),
             'description' => $request->get('description'),
         ]);
+        $author = Author::where('id', $request->author)->firstOrFail();
+
+        $post->author()->associate($author);
 
         $post->save();
 
@@ -70,7 +73,12 @@ class PostController extends Controller
 
         $post->title = $request->get('title');
         $post->description = $request->get('description');
-        $post->author = $request->get('author');
+
+        $author = Author::where('id', $request->author)->firstOrFail();
+
+        $post->author()->save($author);
+
+        $post->save();
 
         $post->save();
 

@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Post extends Model
+class Author extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'author', 'description'];
+    protected $fillable = ['first_name', 'last_name', 'alias'];
 
-    public function author()
+    public function posts()
     {
-        return $this->belongsTo(Author::class);
+        return $this->hasMany(Post::class);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Author;
 use Illuminate\Http\Request;
 
 class AuthorController extends Controller
@@ -13,7 +14,8 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        //
+        $authors = Author::all();
+        return view('authors.index', compact('authors'));
     }
 
     /**
@@ -23,7 +25,7 @@ class AuthorController extends Controller
      */
     public function create()
     {
-        //
+        return view('authors.create');
     }
 
     /**
@@ -34,7 +36,15 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $author = new Author([
+            'first_name' => $request->get('first_name'),
+            'last_name' => $request->get('last_name'),
+            'alias' => $request->get('alias'),
+        ]);
+
+        $author->save();
+
+        return redirect()->route('authors.index');
     }
 
     /**
@@ -45,7 +55,9 @@ class AuthorController extends Controller
      */
     public function show($id)
     {
-        //
+        $author = Author::where('id', $id)->firstOrFail();
+
+        return view('authors.show', compact('author'));
     }
 
     /**
@@ -56,7 +68,9 @@ class AuthorController extends Controller
      */
     public function edit($id)
     {
-        //
+        $author = Author::where('id', $id)->firstOrFail();
+
+        return view('authors.edit', compact('author'));
     }
 
     /**
@@ -68,7 +82,14 @@ class AuthorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $author = Author::where('id', $id)->first();
+
+        $author->first_name =  $request->get('first_name');
+        $author->last_name =  $request->get('last_name');
+        $author->alias =  $request->get('alias');
+        $author->save();
+
+        return redirect()->route('authors.show', $id);
     }
 
     /**
@@ -79,6 +100,9 @@ class AuthorController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $author = Author::where('id', $id)->first();
+        $author->delete();
+
+        return redirect()->route('authors.index');
     }
 }

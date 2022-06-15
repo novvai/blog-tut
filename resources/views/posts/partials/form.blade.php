@@ -17,7 +17,11 @@
     </div>
     <div>
         <label for="author">Author:</label>
-        <input type="text" name="author"  value="{{@$post['author']}}">
+        <select name="author">
+            @foreach ($authors as $author)
+            <option value="{{$author->id}}">{{$author->first_name}} {{$author->last_name}}</option>
+            @endforeach
+        </select>
     </div>
     <div><input type="submit" value="Save"></div>
 </form>

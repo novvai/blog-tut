@@ -7,9 +7,20 @@
     <title>
         @if(@$title) {{ $title }} | Posts Managers @else Posts Manager @endif
     </title>
+    <link rel="stylesheet" href="{{asset('css/main.css')}}">
     {{-- THIS IS A COMMENT --}}
 </head>
 <body>
+    <nav class="navigation">
+        <ul>
+            <li>
+                <a href="{{route('posts.index')}}">Posts</a>
+            </li>
+            <li>
+                <a href="{{route('authors.index')}}">Authors</a>
+            </li>
+        </ul>
+    </nav>
     @yield('content')
 </body>
 </html>

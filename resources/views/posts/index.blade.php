@@ -9,7 +9,7 @@
                 <li>Title: <a href="{{route('posts.show', $post['id'])}}">{{ $post['title']  }}</a></li>
                 <li>Created at: {{ $post['created_at']  }}</li>
                 <li>Descritpion: {{ $post['description']  }}</li>
-                <li>Author: {{ $post['author']  }}</li>
+                <li>Author: {{ $post['author']->first_name  }} {{ $post['author']->last_name  }}</li>
             </ul>
         </div>
     @endforeach

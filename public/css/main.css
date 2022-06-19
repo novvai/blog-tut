@@ -47,3 +47,19 @@ table td{
     padding: 10px 0;
     margin: 10px;
 }
+
+.content-container{
+    margin: 20px;
+    padding:10px;
+}
+
+.err-container {
+    padding: 20px;
+    margin: 5px;
+    border: 1px solid #ff7676;
+    background-color: #ff767691;
+    border-radius: 5px;
+}
+.err-container ul li{
+    list-style: none;
+}

@@ -19,6 +19,9 @@
             <li>
                 <a href="{{route('authors.index')}}">Authors</a>
             </li>
+            <li>
+                <a href="{{route('tags.index')}}">Tags</a>
+            </li>
         </ul>
     </nav>
     @yield('content')

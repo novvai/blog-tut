@@ -35,7 +35,6 @@ class PostController extends Controller
 
     public function edit(int $postId)
     {
-
         $post = Post::where('id', $postId)->first();
 
 

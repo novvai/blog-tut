@@ -13,15 +13,28 @@
 <body>
     <nav class="navigation">
         <ul>
-            <li>
-                <a href="{{route('posts.index')}}">Posts</a>
-            </li>
-            <li>
-                <a href="{{route('authors.index')}}">Authors</a>
-            </li>
-            <li>
-                <a href="{{route('tags.index')}}">Tags</a>
-            </li>
+            @if (auth()->check())
+                <li>
+                    <a href="{{route('posts.index')}}">Posts</a>
+                </li>
+                <li>
+                    <a href="{{route('authors.index')}}">Authors</a>
+                </li>
+                <li>
+                    <a href="{{route('tags.index')}}">Tags</a>
+                </li>
+                <li>
+                    <a href="{{route('logout')}}">Logout</a>
+                </li>
+            @else
+                <li>
+                    <a href="{{route('login')}}">Login</a>
+                </li>
+                <li>
+                    <a href="{{route('register')}}">Register</a>
+                </li>
+            @endif
+           
         </ul>
     </nav>
     @yield('content')

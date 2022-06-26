@@ -15,4 +15,17 @@ class Post extends Model
     {
         return $this->belongsTo(Author::class);
     }
+
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    /**
+     * Gets the Post image
+     */
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
 }

@@ -18,6 +18,9 @@
             <a href="{{route('posts.index')}}">Posts</a>
         </li>
         <li>
+            <a href="{{route('tags.index')}}">Tags</a>
+        </li>
+        <li>
             <a href="{{route('authors.index')}}">Authors</a>
         </li>
         <li>

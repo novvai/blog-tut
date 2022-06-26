@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Author;
 use App\Models\Post;
+use App\Models\Tag;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
@@ -22,7 +25,8 @@ class PostController extends Controller
     public function create()
     {
         $authors = Author::all();
-        return view('posts.create', compact('authors'));
+        $tags = Tag::all();
+        return view('posts.create', compact('authors', 'tags'));
     }
 
     public function show(int $postId)
@@ -37,8 +41,9 @@ class PostController extends Controller
 
         $post = Post::where('id', $postId)->first();
         $authors = Author::all();
+        $tags = Tag::all();
 
-        return view('posts.edit', ['post' => $post, 'authors' => $authors]);
+        return view('posts.edit', ['post' => $post, 'authors' => $authors, 'tags' => $tags]);
     }
 
     public function store(Request $request)
@@ -59,6 +64,7 @@ class PostController extends Controller
         $author = Author::where('id', $request->author)->firstOrFail();
 
         $post->author()->associate($author);
+        // $post->tags()->attach()
 
         $post->save();
 
@@ -69,16 +75,28 @@ class PostController extends Controller
     public function update(Request $request, int $postId)
     {
         $post = Post::where('id', $postId)->first();
+        $file = $request->file('image');
+        if ($file) {
+            $ext = $file->getClientOriginalExtension();
+            $name = Str::random(32) . '.' . $ext;
 
+            // dd(Storage::exists($post->image->path), $post->image->path);
+
+            $uploaded = Storage::put($name, $file->getContent());
+
+
+            if ($uploaded) {
+                $post->image()->updateOrCreate([], ['path' => $name]);
+            }
+        }
 
         $post->title = $request->get('title');
         $post->description = $request->get('description');
 
         $author = Author::where('id', $request->author)->firstOrFail();
 
-        $post->author()->save($author);
-
-        $post->save();
+        $post->author()->associate($author);
+        $post->tags()->attach($request->get('tags'));
 
         $post->save();
 

@@ -15,4 +15,12 @@ class Author extends Model
     {
         return $this->hasMany(Post::class);
     }
+
+    /**
+     * Gets the Author image
+     */
+    public function image()
+    {
+        return $this->morphTo(Image::class, 'imageable');
+    }
 }

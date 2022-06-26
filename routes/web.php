@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\{
     PostController,
-    TagsController,
+    TagController,
     AuthorController,
     AuthenticationController
 };
@@ -20,7 +20,7 @@ Route::post('/register', [AuthenticationController::class, 'processRegister'])->
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('posts', PostController::class);
     Route::resource('authors', AuthorController::class);
-    Route::resource('tags', TagsController::class);
+    Route::resource('tags', TagController::class);
 
     Route::get('/logout', [AuthenticationController::class, 'logout'])->name('logout');
 });

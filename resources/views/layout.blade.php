@@ -32,7 +32,7 @@
         </li>
            @endif
         </ul>
-    </nav>
+</nav>
     <div class="content-container">
         @yield('content')
     </div>

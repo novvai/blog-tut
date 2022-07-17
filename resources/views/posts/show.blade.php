@@ -3,6 +3,7 @@
 @section('content')
     <h1>Single Post</h1>
     <h2><a href="{{route('posts.index')}}">Back</a></h2>
+   @can('update', $post)
     <h2>
         <a href="{{route('posts.edit', $post['id'])}}">Edit</a>
         <form method="POST" action="{{route('posts.destroy', $post['id'])}}">
@@ -11,6 +12,7 @@
             <input type="submit" value="Delete"/>
         </form>
     </h2>
+   @endcan
     <div>
         <ul>
             <li>Title: {{ $post['title']  }}</li>

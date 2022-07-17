@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('authors', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->id();
-            // $table->string('image', 255)->nullable();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('alias')->nullable();
+            $table->string('path');
+            $table->unsignedBigInteger('imageable_id');
+            $table->string('imageable_type');
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('authors');
+        Schema::dropIfExists('images');
     }
 };

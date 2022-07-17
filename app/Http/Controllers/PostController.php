@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Author;
+use App\Models\Tag;
 use App\Models\Post;
+use App\Models\Author;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
@@ -22,8 +25,9 @@ class PostController extends Controller
     public function create()
     {
         $authors = Author::all();
+        $tags = Tag::all();
 
-        return view('posts.create', compact('authors'));
+        return view('posts.create', compact('authors', 'tags'));
     }
 
     public function show(int $postId)
@@ -36,13 +40,24 @@ class PostController extends Controller
     public function edit(int $postId)
     {
         $post = Post::where('id', $postId)->first();
+        $authors = Author::all();
+        $tags = Tag::all();
 
-
-        return view('posts.edit', ['post' => $post]);
+        return view('posts.edit', compact('post', 'tags', 'authors'));
     }
 
     public function store(Request $request)
     {
+        $file = $request->file('image');
+        $uploaded = false;
+
+        if ($file) {
+            // save the file 
+            $extension = $file->getClientOriginalExtension();
+            $name = Str::random(32) . '.' . $extension;
+            $uploaded = Storage::put($name, $file->getContent());
+        }
+
         $validator = Validator::make($request->all(), [
             'title' => 'required|min:3',
             'description' => 'required|max:255'
@@ -59,10 +74,14 @@ class PostController extends Controller
 
         $author = Author::where('id', $request->author)->firstOrFail();
 
-        // dd($request->all());
         $post->author()->associate($author);
-
         $post->save();
+
+        $post->tags()->attach($request->get('tags'));
+
+        if ($uploaded) {
+            $post->image()->updateOrCreate([], ['path' => $name]);
+        }
 
         return redirect()->route('posts.index');
     }
@@ -72,12 +91,14 @@ class PostController extends Controller
     {
         $post = Post::where('id', $postId)->first();
 
-
         $post->title = $request->get('title');
         $post->description = $request->get('description');
-        $post->author = $request->get('author');
+        $author = Author::where('id', $request->author)->firstOrFail();
+        $post->author()->associate($author);
 
         $post->save();
+
+        $post->tags()->attach($request->get('tags'));
 
         return redirect()->route('posts.show', $postId);
     }

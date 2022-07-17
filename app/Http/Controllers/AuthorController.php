@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class AuthorController extends Controller
 {
-     /**
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -35,11 +35,16 @@ class AuthorController extends Controller
      */
     public function store(Request $request)
     {
-        $author = new Author([
-            'first_name' => $request->get('first_name'),
-            'last_name' => $request->get('last_name'),
-            'alias' => $request->get('alias'),
-        ]);
+        // $author = Author::create([
+        //     'first_name' => $request->get('first_name'),
+        //     'last_name' => $request->get('last_name'),
+        //     'alias' => $request->get('alias'),
+        // ]);
+
+        $author = new Author();
+        $author->first_name =  $request->get('first_name');
+        $author->last_name =  $request->get('last_name');
+        $author->alias =  $request->get('alias');
 
         $author->save();
 
@@ -56,7 +61,7 @@ class AuthorController extends Controller
     {
         $author = Author::where('id', $id)->firstOrFail();
 
-        return view('authors.show', compact('author'));//['author'=>$author]
+        return view('authors.show', compact('author')); //['author'=>$author]
     }
 
     /**

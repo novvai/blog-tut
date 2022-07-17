@@ -23,6 +23,7 @@ class StoreTagRequest extends FormRequest
      */
     public function rules()
     {
+
         return [
             'name' => 'required|min:3|unique:tags',
             'descr' => 'required|min:5|max:254'

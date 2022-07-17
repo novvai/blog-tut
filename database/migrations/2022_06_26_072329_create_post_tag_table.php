@@ -13,15 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('authors', function (Blueprint $table) {
-            $table->id();
-            // $table->string('image', 255)->nullable();
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('alias')->nullable();
-            $table->timestamps();
+        Schema::create('post_tag', function (Blueprint $table) {
+            $table->foreignId('post_id')->constrained('posts')->onDelete('cascade');
+            $table->foreignId('tag_id')->constrained('tags')->onDelete('cascade');
+
+            $table->index(['post_id', 'tag_id']);
+            $table->primary(['post_id', 'tag_id']);
         });
     }
+
 
     /**
      * Reverse the migrations.
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('authors');
+        Schema::dropIfExists('post_tag');
     }
 };

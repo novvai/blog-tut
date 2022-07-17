@@ -17,7 +17,7 @@
         <td>{{$author->last_name}}</td>
         <td>@if(@$author->alias) {{$author->alias}} @else N/A @endif </td>
         <td>
-          {{count($author->posts)}}
+          {{ $author->postsCount() }}
         </td>
         <td><a href="{{route('authors.show', $author->id)}}">Details</a></td>
       </tr>
